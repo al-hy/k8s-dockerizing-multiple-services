@@ -41,7 +41,7 @@ const redisClient = redis.createClient({
 });
 
 //We are making a duplicate connection. A connection that is listening or publishing, that is only its sole purpose. So we need to create a new one to handle other jobs tha we need todo. 
-const redisPublisher = redis.duplicate();
+const redisPublisher = redisClient.duplicate();
 
 //EXPRESS ROUTE HANDLER
 app.get('/', (req, res) => {
