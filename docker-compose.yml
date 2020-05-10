@@ -1,0 +1,24 @@
+version: '3'
+services:
+    postgres:
+        image: 'postgres:latest'
+        environment:
+            - POSTGRES_PASSWORD=postgres_password
+    redis:
+        image: 'redis:latest'
+    express-server:
+        build: 
+            dockerfile: Dockerfile.dev #When we are specifing the docker file, we are specifying the name of the Dockerfile that we are telling you use. To specify the build context, we want to specify it it using the context attribute
+            context: ./express
+        volumes:
+            - /app/node_modules #we are telling the docker container to not override this folder when the host files are being copied into the container after npm install was being ran during the container start up process
+            - ./express:/app #everytime we make a change into this folder where we are making changes, this is going to prevent us from having to rebuild our image when we are developing
+        environment:
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+            - PGUSER=postgres
+            - PGHOST=postgres
+            - PGDATABASE=postgres
+            - PGPASSWORD=postgres_password
+            - PGPORT=5432
+        
