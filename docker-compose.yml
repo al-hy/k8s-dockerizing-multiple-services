@@ -2,8 +2,9 @@ version: '3'
 services:
     postgres:
         image: 'postgres:latest'
+        restart: always
         environment:
-            - POSTGRES_PASSWORD=postgres_password
+            - POSTGRES_PASSWORD=mysecretpassword
     redis:
         image: 'redis:latest'
     nginx:
@@ -31,7 +32,7 @@ services:
             - PGUSER=postgres
             - PGHOST=postgres
             - PGDATABASE=postgres
-            - PGPASSWORD=postgres_password
+            - PGPASSWORD=mysecretpassword
             - PGPORT=5432
     react-client:
         stdin_open: true
@@ -42,6 +43,8 @@ services:
             - /app/node_modules #bookmark hold
             - ./react-client:/app
     worker:
+        depends_on:
+            - redis
         build:
             dockerfile: Dockerfile.dev
             context: ./worker

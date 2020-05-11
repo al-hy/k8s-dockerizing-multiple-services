@@ -20,7 +20,7 @@ function fib(index) {
 //Everytime we are getting a new message from redis, we are going to generate a hash set of values, with the key
 // being the message that was piped in from redis, and the fib value that we calculated.
 sub.on('message', (channel, message) => {
-    redisClient.hset('value', message, fib(parseInt(mesasge)));
+    redisClient.hset('values', message, fib(parseInt(message)));
 });
 
 //Everytime there is an insert event, we are going to get the message
