@@ -6,7 +6,19 @@ services:
             - POSTGRES_PASSWORD=postgres_password
     redis:
         image: 'redis:latest'
+    nginx:
+        depends_on:
+            - express-server
+            - react-client
+        restart: always
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./nginx
+        ports:
+            - '3050:80'
     express-server:
+        depends_on: 
+            - postgres
         build: 
             dockerfile: Dockerfile.dev #When we are specifing the docker file, we are specifying the name of the Dockerfile that we are telling you use. To specify the build context, we want to specify it it using the context attribute
             context: ./express
@@ -39,13 +51,6 @@ services:
         environment:
             - REDIS_HOST=redis
             - REDIS_PORT=6379
-    nginx:
-        restart: always
-        build:
-            dockerfile: Dockerfile.dev
-            context: ./nginx
-        ports:
-            - '3050:80'
-        
+
 
         
