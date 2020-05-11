@@ -22,6 +22,7 @@ services:
             - PGPASSWORD=postgres_password
             - PGPORT=5432
     react-client:
+        stdin_open: true
         build:
             dockerfile: Dockerfile.dev
             context: ./react-client
@@ -38,5 +39,13 @@ services:
         environment:
             - REDIS_HOST=redis
             - REDIS_PORT=6379
+    nginx:
+        restart: always
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./nginx
+        ports:
+            - '3050:80'
+        
 
         
