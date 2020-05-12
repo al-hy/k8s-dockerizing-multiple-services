@@ -1,0 +1,20 @@
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -f ./react-client/Dockerfile.dev ./react-client -t ahy94/react-client
+
+script:
+    - docker run -e CI=true ahy94/react-client npm test
+
+after_success:
+    - docker build -t ahy94/dockerizing-multiple-services-react-client ./react-client
+    - docker build -t ahy94/dockerizing-multiple-services-express-server ./express-server
+    - docker build -t ahy94/dockerizing-multiple-services-worker ./worker
+    - docmer built -t ahy94/dockerizing-multiple-services-nginx ./nginx
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    - docker push ahy94/dockerizing-multiple-services-react-client
+    - docker push ahy94/dockerizing-multiple-services-express-server
+    - docker push ahy94/dockerizing-multiple-services-worker
+    - docker push ahy94/dockerizing-multiple-services-nginx
