@@ -10,9 +10,9 @@ script:
 
 after_success:
     - docker build -t ahy94/dockerizing-multiple-services-react-client ./react-client
-    - docker build -t ahy94/dockerizing-multiple-services-express-server ./express-server
+    - docker build -t ahy94/dockerizing-multiple-services-express-server ./express
     - docker build -t ahy94/dockerizing-multiple-services-worker ./worker
-    - docmer built -t ahy94/dockerizing-multiple-services-nginx ./nginx
+    - docker build -t ahy94/dockerizing-multiple-services-nginx ./nginx
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
     - docker push ahy94/dockerizing-multiple-services-react-client
     - docker push ahy94/dockerizing-multiple-services-express-server
