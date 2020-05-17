@@ -1,0 +1,37 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+        {
+            "name": "react-client",
+            "image": "ahy94/dockerizing-multiple-services-react-client",
+            "hostname": "react-client",
+            "essential": false
+        },
+        {
+            "name": "express-server",
+            "image": "ahy94/dockerizing-multiple-services-express-server",
+            "hostname": "express-server",
+            "essential": false
+        },
+        {
+            "name": "worker",
+            "image": "ahy94/dockerizing-multiple-services-worker",
+            "hostname": "worker",
+            "essential": false
+        },
+        {
+            "name": "nginx",
+            "image": "ahy94/dockerizing-multiple-services-nginx",
+            "hostname": "nginx",
+            "essential": true,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 80
+                }
+            ],
+            "links": ["react-client", "express-server"]
+        }
+    ]
+}
+
