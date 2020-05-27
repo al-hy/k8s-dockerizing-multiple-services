@@ -1,0 +1,9 @@
+sudo: required #requiring sudo since we are running Docker
+services: 
+    - docker # we are going to need docker to be pre-installed when we attempt to build our environment
+before_install:
+    - openssl aes-256-cbc -K $encrypted_8ef1e9d6d797_key -iv $encrypted_8ef1e9d6d797_iv -in multi-k8s-278521-49b1caa62b10.json.enc -out multi-k8s-278521-49b1caa62b10.json -d
+    - curl https://sdk.cloud.google.com | bash > /dev/null; #how to install the google cloud sdk. Coming from the outside world and needs to be searched on our own on how to do this. /dev/null is going to be installing it on our local instance.
+    - source $HOME/google-cloud-sdk/path.bash.inc #look at the default install directly and going to source the file path.bash.inc. THere is going to be some configuration that is going to modify the shell for working with google cloud sdk.
+    - gcloud components update kubectl #This is going to install and uppdate the kubectl in our travis environment.
+    - gcloud auth activate-service-account --key-file service-account.json #This is equivalent to the IAM AWS Account that allows us to access the AWS account to deploy our application into around cloud environment. We are going to do some authorization with google cloud to interact with our gcloud account. Cannot allow anyone to get access to this credentials.
