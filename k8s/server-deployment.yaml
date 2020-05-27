@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: server-deployment
+spec:
+    replicas: 3
+    selector: #The selector that deployment is going to use the find the set of pods its going to manage
+        matchLabels:
+            component: server #Note: component: server key value pair can be named as anything.There should be a standard on how the team or group uses the selector to identify (i.e.)
+    template: #the template of the pod that we are going to spin up with the container images that we want to download so that the containers can be started.
+        metadata:
+            labels:
+                component: server
+        spec:
+            containers:
+                - name: server
+                  image: ahy94/dockerizing-multiple-services-express-server
+                  ports:
+                    - containerPort: 5000
+                  env:
+                    - name: REDIS_HOST
+                      value: redis-cluster-ip-service
+                    - name: REDIS_PORT
+                      value: '6379'
+                    - name: PGUSER
+                      value: postgres
+                    - name: PGHOST
+                      value: postgres-cluster-ip-service
+                    - name: PGPORT
+                      value: '5432'
+                    - name: PGDATABASE
+                      value: postgres
+                    - name: POSTGRES_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                            name: pgpassword
+                            key: PGPASSWORD

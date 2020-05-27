@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: database-persistent-volume-claim
+spec:
+    accessModes:
+        - ReadWriteOnce #In persistent volume claim, when this claim gets handed off to k8s master. What this access mode says is that to find a volume that supports this access mode. It's not a volume itself to where it configures the access mode. It's saying i want a volume that has this access mode.
+    resources:
+        requests:
+            storage: 2Gi #a request for a volume that has exactly to 2Gigabytes of space.

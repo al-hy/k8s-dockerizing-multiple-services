@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: #in this case we are just going to add the name of the deployment
+    name: client-deployment
+spec:
+    replicas: 3 #We want these replicas to be the managed by this deployment
+    selector:
+        matchLabels: 
+            component: web #the component of the that this deployment that is going to manage. any selectors that matches that is listed is going to be managed by this deployment.
+    template:
+        metadata:
+            labels:
+                component: web # The selector outside will match this selector, and is a way for the deployment to know which pod it is going to manage.
+        spec:
+            containers:
+                - name: client
+                  image: ahy94/dockerizing-multiple-services-react-client
+        
+

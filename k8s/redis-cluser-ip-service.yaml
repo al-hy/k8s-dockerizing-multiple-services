@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: redis-cluster-ip-service
+spec:
+    type: ClusterIP
+    selector: #So that this service know which set of pods its managing access too. It is this field in the configuration that this Service know that the remaining configuration applies to the redis container.
+        component: redis
+    ports:
+        - port: 6379
+          targetPort: 6379

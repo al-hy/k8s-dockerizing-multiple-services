@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: postgres-deployment
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            component: postgres
+    template: #This is out pod template
+        metadata:
+            labels:
+                component: postgres
+        spec:
+            volumes:
+                - name: postgres-storage
+                  persistentVolumeClaim:
+                    claimName: database-persistent-volume-claim #This section is going to allocate that storage
+            containers:
+                - name: postgres
+                  image: postgres
+                  ports:
+                    - containerPort: 5432
+                  volumeMounts: #This means that hey we got access to the volume, now this is how i want to access it in the container
+                    - name: postgres-storage #This name is important because it goes out of the containers and looks for the names that are listed in the volumes field.
+                      mountPath: /var/lib/postgresql/data  #where in the container is the volume made available
+                      subPath: postgres #The folder on the persistent volume in which the data will be written to by the container. In other words, all data from container's /var/lib/postgresql/data will be written to the postgres directory in the persistent volume.
+                  env:
+                    - name: POSTGRES_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                          name: pgpassword
+                          key: PGPASSWORD
