@@ -14,7 +14,7 @@ spec:
         spec:   #This is going to be the spec that specifies the container that this pod is going to be running
             containers:
                 - name: worker
-                  image: ahy94/dockerizing-multiple-services-worker #No ports required because the worker doesn't need outside connection to it. THe nature of the work application is that it only requests out to the redis. therefore we do not need to define any ports fields to expose ports of the container.
+                  image: ahy94/k8s-dockerizing-multiple-services-worker #No ports required because the worker doesn't need outside connection to it. THe nature of the work application is that it only requests out to the redis. therefore we do not need to define any ports fields to expose ports of the container.
                   env:
                     - name: REDIS_HOST
                       value: http://redis-cluster-ip-service
