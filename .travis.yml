@@ -6,7 +6,7 @@ services:
 # Doing so will will some benefits mentioned in the notes when we are debugging a production environment, and to allow kubernetes to consistently know that there is a new image to pull everytime we deploy to the production environment.
 env:
     global:
-        - GIT_SHA=$(get rev-parse HEAD) #this determines the current commit SHA and then assign it to our env var called GIT_SHA
+        - GIT_SHA=$(git rev-parse HEAD) #this determines the current commit SHA and then assign it to our env var called GIT_SHA
         - CLOUDSDK_CORE_DISABLE_PROMPTS=1 #this is going to configure the google cli to not display any prompts that require user inputs. In a travis environment we do not have the ability to do this when it is attempting to build.
 
 before_install: #Travis will bring up its own environment to perform all the building
