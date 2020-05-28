@@ -9,8 +9,8 @@ docker push ahy94/k8s-dockerizing-multiple-services-express-server:latest
 docker push ahy94/k8s-dockerizing-multiple-services-express-server:$GIT_SHA
 docker push ahy94/k8s-dockerizing-multiple-services-react-client:latest
 docker push ahy94/k8s-dockerizing-multiple-services-react-client:$GIT_SHA
-docker push ahy94/k8s-dockerizing-mulitple-services-worker:latest
-docker push ahy94/k8s-dockerizing-mulitple-services-worker:$GIT_SHA
+docker push ahy94/k8s-dockerizing-multiple-services-worker:latest
+docker push ahy94/k8s-dockerizing-multiple-services-worker:$GIT_SHA
 
 #Rememebr in the travis environment, we alreayd configure the google cloud to use our account and also got kubectl into the travis environment.
 #Once this script runs, kubectl arleady exists in the travis environment
