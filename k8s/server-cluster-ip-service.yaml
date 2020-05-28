@@ -5,7 +5,7 @@ metadata:
 spec:
     type: ClusterIP
     selector:
-        component: service #The selector should match the one that we defined in the deployment file for the different serversn
+        component: server #The selector should match the one that we defined in the deployment file for the different serversn
     ports: #We need to define the ports that this service is going to manage
         - port: 5000
           targetPort: 5000

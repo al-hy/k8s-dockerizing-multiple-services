@@ -17,7 +17,7 @@ spec:
                   image: ahy94/k8s-dockerizing-multiple-services-worker #No ports required because the worker doesn't need outside connection to it. THe nature of the work application is that it only requests out to the redis. therefore we do not need to define any ports fields to expose ports of the container.
                   env:
                     - name: REDIS_HOST
-                      value: http://redis-cluster-ip-service
+                      value: redis-cluster-ip-service
                     - name: REDIS_PORT
                       value: '6379'
                     
