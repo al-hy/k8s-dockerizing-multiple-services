@@ -16,7 +16,7 @@ before_install: #Travis will bring up its own environment to perform all the bui
     - gcloud components update kubectl #This is going to install and uppdate the kubectl in our travis environment.
     - gcloud auth activate-service-account --key-file multi-k8s-278521-49b1caa62b10.json #This is equivalent to the IAM AWS Account that allows us to access the AWS account to deploy our application into around cloud environment. We are going to do some authorization with google cloud to interact with our gcloud account. Cannot allow anyone to get access to this credentials.
     - gcloud config set project multi-k8s-278521 #need to tell gcloud which project and which zone we want it to operate on in our google cloud account
-    - gcloud config set computer/zone us-central1-c #Google cloud has different datacenter and we selected a datacenter for our cluster when we created the cluster. We need to define google cli to be using this computer zone as well; which zone we are going to be operarting on. 
+    - gcloud config set compute/zone us-central1-c #Google cloud has different datacenter and we selected a datacenter for our cluster when we created the cluster. We need to define google cli to be using this computer zone as well; which zone we are going to be operarting on. 
     - gcloud container clusters get-credentials k8s-dockerizing-multiple-services #This is going to configure to tell google cli to work specifically with this cluster that we created.
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin #the docker login will accept the password via stdin
     - docker build -t ahy94/react-client-test -f ./react-client/Dockerfile.dev ./react-client #You specify the dockerfile and also the build context
