@@ -26,8 +26,11 @@ spec:
                       mountPath: /var/lib/postgresql/data  #where in the container is the volume made available
                       subPath: postgres #The folder on the persistent volume in which the data will be written to by the container. In other words, all data from container's /var/lib/postgresql/data will be written to the postgres directory in the persistent volume.
                   env:
+                    - name: POSTGRES_USER
+                      value: postgres
                     - name: POSTGRES_PASSWORD
                       valueFrom:
                         secretKeyRef:
                           name: pgpassword
                           key: PGPASSWORD
+                    

@@ -1,9 +1,33 @@
 sudo: required #requiring sudo since we are running Docker
 services: 
     - docker # we are going to need docker to be pre-installed when we attempt to build our environment
-before_install:
+
+# We are going to add this section to the travis.yaml file so that we can sufficiently tag the docker images with the git commit hash when we are attempting to build our docker images and push them up to the docker registry.
+# Doing so will will some benefits mentioned in the notes when we are debugging a production environment, and to allow kubernetes to consistently know that there is a new image to pull everytime we deploy to the production environment.
+env:
+    global:
+        - GIT_SHA=$(get rev-parse HEAD) #this determines the current commit SHA and then assign it to our env var called GIT_SHA
+        - CLOUDSDK_CORE_DISABLE_PROMPTS=1 #this is going to configure the google cli to not display any prompts that require user inputs. In a travis environment we do not have the ability to do this when it is attempting to build.
+
+before_install: #Travis will bring up its own environment to perform all the building
     - openssl aes-256-cbc -K $encrypted_8ef1e9d6d797_key -iv $encrypted_8ef1e9d6d797_iv -in multi-k8s-278521-49b1caa62b10.json.enc -out multi-k8s-278521-49b1caa62b10.json -d
     - curl https://sdk.cloud.google.com | bash > /dev/null; #how to install the google cloud sdk. Coming from the outside world and needs to be searched on our own on how to do this. /dev/null is going to be installing it on our local instance.
     - source $HOME/google-cloud-sdk/path.bash.inc #look at the default install directly and going to source the file path.bash.inc. THere is going to be some configuration that is going to modify the shell for working with google cloud sdk.
     - gcloud components update kubectl #This is going to install and uppdate the kubectl in our travis environment.
-    - gcloud auth activate-service-account --key-file service-account.json #This is equivalent to the IAM AWS Account that allows us to access the AWS account to deploy our application into around cloud environment. We are going to do some authorization with google cloud to interact with our gcloud account. Cannot allow anyone to get access to this credentials.
+    - gcloud auth activate-service-account --key-file multi-k8s-278521-49b1caa62b10.json #This is equivalent to the IAM AWS Account that allows us to access the AWS account to deploy our application into around cloud environment. We are going to do some authorization with google cloud to interact with our gcloud account. Cannot allow anyone to get access to this credentials.
+    - gcloud config set project multi-k8s-278521 #need to tell gcloud which project and which zone we want it to operate on in our google cloud account
+    - gcloud config set computer/zone us-central1-c #Google cloud has different datacenter and we selected a datacenter for our cluster when we created the cluster. We need to define google cli to be using this computer zone as well; which zone we are going to be operarting on. 
+    - gcloud container clusters get-credentials k8s-dockerizing-multiple-services #This is going to configure to tell google cli to work specifically with this cluster that we created.
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin #the docker login will accept the password via stdin
+    - docker build -t ahy94/react-client-test -f ./react-client/Dockerfile.dev ./react-client #You specify the dockerfile and also the build context
+
+script: # we are going to run the docker image taht we built in the before_install section to make sure the tests are successful. This is a dummy test and will always succeed, but in an actual CI workflow, there will be actually be unit tests in place to make sure the changes are working and does not affect any other required functionalities before it is pushed out to the production environment.
+    - docker run -e CI=true ahy94/react-client-test npm run test #npm test is going to go into a watch mode and hangs. ONce it runs successfuly it's going to exit the test mode.
+
+deploy:
+    provider: script
+    script: bash ./deploy.sh
+    on:
+        branch: master #only do deployment when there are new commits and merges to the master branch
+
+#Travis does not have a built in provider for kubernetes so we have to supply the commands to do it ourselves in the deploy section. We are going to put together a custom script files that we are going to build/push our images and then deploy our builds to kubernetes on google cloud.
